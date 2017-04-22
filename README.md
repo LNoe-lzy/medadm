@@ -1,6 +1,6 @@
 # medadm
 
-> A Vue.js project
+> 天津理工大学计算机专业(合作)实训项目
 
 ## Build Setup
 
