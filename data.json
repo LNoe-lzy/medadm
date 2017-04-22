@@ -9,12 +9,14 @@
     "type": "每天",
     "img": "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1932242789,2111501701&fm=11&gp=0.jpg",
     "name": "避孕药",
-    "num": "1"
+    "num": "1",
+    "completed": true
   }, {
     "time": "13:38",
     "type": "每天",
     "img": "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1932242789,2111501701&fm=11&gp=0.jpg",
     "name": "避孕药",
-    "num": "1"
+    "num": "1",
+    "completed": false
   }]
 }

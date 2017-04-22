@@ -56,7 +56,7 @@ export default {
     font-size: 16px
     font-weight: 500
     color: #19CAAD
-    padding: 10px 10px
+    padding: 10px 0
     border-bottom: solid 1px #eee
     display: flex
     justify-content: space-between
