@@ -5,6 +5,9 @@ import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
 
+//vuex store 
+import store from './store';
+
 
 // 引入字体
 import './common/stylus/icon.styl'
@@ -17,6 +20,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })

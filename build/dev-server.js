@@ -12,6 +12,8 @@ var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
 
+var bodyParser = require('body-parser')
+
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
 // automatically open browser, if not set will be false
@@ -22,21 +24,33 @@ var proxyTable = config.dev.proxyTable
 
 var app = express()
 
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
+
 var appData = require('../data')
 var user = appData.user
 var medicine = appData.medicine
 
 var apiRoutes = express.Router()
-apiRoutes.get('/user', function (req, res) {
-  res.json({
-    errno: 0,
-    user: user
-  })
-})
+
 apiRoutes.get('/medicine', function (req, res) {
   res.json({
     errno: 0,
     medicine: medicine
+  })
+})
+
+apiRoutes.post('/signup', function (req, res) {
+  var data = req.body;
+  if (data.pwd !== user.pwd || data.tel !== user.tel) {
+    res.json({
+      errno: 1
+    })
+  }
+  res.json({
+    errno: 0,
+    user: user
   })
 })
 

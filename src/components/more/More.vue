@@ -1,7 +1,9 @@
 <template>
     <div class="more">
         <v-header name="更多"></v-header>
-        <div class="more-user">
+        <router-link to="/edit"
+                     class="more-user"
+                     v-if="user.id">
             <div class="user-avatar">
                 <img :src="user.avatar" />
             </div>
@@ -12,7 +14,21 @@
             <div class="right-icon">
                 <span class="icon-keyboard_arrow_right"></span>
             </div>
-        </div>
+        </router-link>
+        <router-link to="/signup"
+                     class="more-user"
+                     v-else>
+            <div class="user-avatar">
+                <span class="icon-person_add"></span>
+            </div>
+            <div class="user-info">
+                <span class="user-name">登录/注册</span>
+                <span class="user-id">登录后可激活更多功能</span>
+            </div>
+            <div class="right-icon">
+                <span class="icon-keyboard_arrow_right"></span>
+            </div>
+        </router-link>
     
         <div class="more-panel">
             <div class="panel-icon">
@@ -63,16 +79,11 @@ export default {
     name: 'more',
     data() {
         return {
-            user: {}
+            user: null
         }
     },
     created() {
-        this.$http.get('/api/user').then((response) => {
-            response = response.body;
-            if (response.errno === 0) {
-                this.user = response.user;
-            }
-        })
+        this.user = this.$store.state.user;
     },
     components: {
         'v-header': Header
@@ -101,9 +112,16 @@ export default {
       overflow: hidden
       border-radius: 50%
       margin-right: 15px
+      display: flex
+      justify-content: center
+      align-items: center
       img
         width: 100%
         height: 100%
+      span
+        display: block
+        font-size: 30px
+        color: #19CAAD
     .user-info
       display: flex
       flex: 1
