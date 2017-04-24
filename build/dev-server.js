@@ -13,6 +13,8 @@ var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
 
 var bodyParser = require('body-parser')
+var mongoose = require(mongoose);
+mongoose.connect('mongodb://localhost/medadm')
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port

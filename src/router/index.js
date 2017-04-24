@@ -6,6 +6,7 @@ import Record from '../components/record/Record';
 import More from '../components/more/More';
 import Signup from '../components/signup/Signup';
 import Signin from '../components/signin/Signin';
+import Edit from '../components/edit/Edit';
 
 Vue.use(Router)
 
@@ -34,6 +35,10 @@ export default new Router({
     {
       path: '/signin',
       component: Signin
+    },
+    {
+      path: '/edit',
+      component: Edit
     }
   ]
 })
