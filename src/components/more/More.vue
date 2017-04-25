@@ -3,13 +3,12 @@
         <v-header name="更多"></v-header>
         <router-link to="/edit"
                      class="more-user"
-                     v-if="user.id">
+                     v-if="user.name">
             <div class="user-avatar">
                 <img :src="user.avatar" />
             </div>
             <div class="user-info">
                 <span class="user-name">{{user.name}}</span>
-                <span class="user-id">健康号: {{user.id}}</span>
             </div>
             <div class="right-icon">
                 <span class="icon-keyboard_arrow_right"></span>
@@ -84,6 +83,7 @@ export default {
     },
     created() {
         this.user = this.$store.state.user;
+        console.log(this.user);
     },
     components: {
         'v-header': Header
@@ -127,7 +127,8 @@ export default {
       flex: 1
       flex-direction: column
       .user-name
-        color: #333
+        color: #7e8c8d
+        font-size: 20px
       .user-id
         color: #999  
         font-size: 12px

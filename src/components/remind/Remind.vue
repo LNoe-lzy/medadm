@@ -56,9 +56,10 @@ export default {
     font-size: 16px
     font-weight: 500
     color: #19CAAD
-    padding: 10px 0
+    padding: 0 15px
     border-bottom: solid 1px #eee
     display: flex
+    align-items: center
     justify-content: space-between
     .remind-head-info
       color: #F4606C

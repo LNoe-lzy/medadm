@@ -11,20 +11,58 @@
             </router-link>
         </div>
         <div class="signup-main">
+            <div class="errmsg">{{errmsg}}</div>
             <div class="signup-form">
                 <form>
-                    <input type="text" placeholder="手机号" />
-                    <input type="password" placeholder="密码" />
-                    <button>注册</button>
+                    <input type="text"
+                           placeholder="用户名"
+                           v-model="name" />
+                    <input type="text"
+                           placeholder="手机号"
+                           v-model="tel" />
+                    <input type="password"
+                           placeholder="密码"
+                           v-model="pwd" />
+                    <button @click="signin">注册</button>
                 </form>
             </div>
             <div class="signup-bottom">
-                <router-link to="/signup" class="to-signin">已有账号,请登录</router-link>
+                <router-link to="/signup"
+                             class="to-signin">已有账号,请登录</router-link>
             </div>
         </div>
     </div>
 </template>
-<script></script>
+<script>
+export default {
+    name: 'signin',
+    data() {
+        return {
+            name: '',
+            tel: '',
+            pwd: '',
+            errmsg: ''
+        }
+    },
+    methods: {
+        signin() {
+            this.$http.post('/api/signin', {
+                name: this.name,
+                pwd: this.pwd,
+                tel: this.tel
+            }).then((response) => {
+                response = response.body;
+                if (response.errno === 0) {
+                    this.$store.state.user = response.user;
+                    this.$router.push('/more');
+                } else if (response.errno === 1) {
+                    this.errmsg = response.errmsg
+                }
+            })
+        }
+    }
+}
+</script>
 <style lang="stylus">
 .signup
   width: 100%
@@ -53,8 +91,12 @@
   .signup-main
     box-sizing: border-box
     padding: 0 15px
+    .errmsg
+      margin-top: 10px
+      color: #F4606C
+      text-align: center
     .signup-form
-      margin-top: 30px
+      margin-top: 10px
       form
         display: flex
         flex-direction: column

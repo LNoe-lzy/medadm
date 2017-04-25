@@ -20,13 +20,6 @@
                         {{user.name}}
                     </div>
                 </div>
-                <div class="border-1px"></div>
-                <div class="edit-pane">
-                    <span class="panel-type">健康号</span>
-                    <div class="panel-info">
-                        {{user.id}}
-                    </div>
-                </div>
             </div>
     
             <div class="logout"

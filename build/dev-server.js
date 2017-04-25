@@ -13,8 +13,13 @@ var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
 
 var bodyParser = require('body-parser')
-var mongoose = require(mongoose);
-mongoose.connect('mongodb://localhost/medadm')
+
+// 连接mongodb
+var mongoose = require('mongoose');
+var session = require('express-session');
+var mongoStore = require('connect-mongo')(session);
+
+mongoose.connect('mongodb://localhost/medadm');
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
@@ -28,7 +33,18 @@ var app = express()
 
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({
+  extended: false
+}))
+app.use(session({
+  secret: 'medadm',
+  store: new mongoStore({
+    mongooseConnection: mongoose.connection
+  })
+}));
+
+// 引入用模型
+var User = require('../database/models/user.js')
 
 var appData = require('../data')
 var user = appData.user
@@ -43,16 +59,79 @@ apiRoutes.get('/medicine', function (req, res) {
   })
 })
 
+// 用户注册
+apiRoutes.post('/signin', function (req, res) {
+  var data = req.body;
+  var avatarArr = [
+    'http://wx1.sinaimg.cn/thumb300/61e44b02ly1feupvt27b2j21cg1pcx6p.jpg',
+    'http://wx2.sinaimg.cn/thumb300/61e44b02ly1fetb867tavj22c0340e81.jpg',
+    'http://wx3.sinaimg.cn/thumb300/61e44b02ly1fcmrse4ei7j219c1w0b2a.jpg',
+    'http://ww3.sinaimg.cn/thumb300/61e44b02jw1farbb25co3j215o1jlhdu.jpg',
+    'http://ww4.sinaimg.cn/thumb300/61e44b02jw1f9kjptc84nj21ww1wwb29.jpg'
+  ];
+  var avatar = (function (avatarArr) {
+    return avatarArr[Math.round(Math.random() * 4)];
+  })(avatarArr);
+  User.findOne({
+    tel: data.tel
+  }, function (err, u) {
+    if (u) {
+      res.json({
+        errno: 1,
+        errmsg: '该手机已注册，请直接登陆'
+      })
+    } else {
+      var newUser = new User({
+        name: data.name,
+        tel: data.tel,
+        pwd: data.pwd,
+        avatar: avatar
+      });
+      newUser.save(function (err) {
+        if (err) {
+          console.log(err);
+        }
+        User.findOne({
+          tel: data.tel
+        }, function (err, u) {
+          if (err) {
+            console.log(err);
+          }
+          res.json({
+            errno: 0,
+            user: u
+          })
+        })
+      })
+    }
+  })
+})
+
 apiRoutes.post('/signup', function (req, res) {
   var data = req.body;
-  if (data.pwd !== user.pwd || data.tel !== user.tel) {
-    res.json({
-      errno: 1
-    })
-  }
-  res.json({
-    errno: 0,
-    user: user
+  User.findOne({
+    tel: data.tel
+  }, function (err, u) {
+    if (err) {
+      console.log(err);
+    }
+    if (!u) {
+      return res.json({
+        errno: 1,
+        errmsg: '用户不存在'
+      });
+    }
+    if (u.pwd !== data.pwd) {
+      return res.json({
+        errno: 1,
+        errmsg: '用户名或密码错误！'
+      });
+    } else {
+      return res.json({
+        errno: 0,
+        user: u
+      })
+    }
   })
 })
 
@@ -71,7 +150,9 @@ var hotMiddleware = require('webpack-hot-middleware')(compiler, {
 // force page reload when html-webpack-plugin template changes
 compiler.plugin('compilation', function (compilation) {
   compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
-    hotMiddleware.publish({ action: 'reload' })
+    hotMiddleware.publish({
+      action: 'reload'
+    })
     cb()
   })
 })
@@ -80,7 +161,9 @@ compiler.plugin('compilation', function (compilation) {
 Object.keys(proxyTable).forEach(function (context) {
   var options = proxyTable[context]
   if (typeof options === 'string') {
-    options = { target: options }
+    options = {
+      target: options
+    }
   }
   app.use(proxyMiddleware(options.filter || context, options))
 })

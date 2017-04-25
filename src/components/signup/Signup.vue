@@ -11,6 +11,7 @@
             </router-link>
         </div>
         <div class="signup-main">
+            <div class="errmsg">{{errmsg}}</div>
             <div class="signup-form">
                 <form>
                     <input type="text"
@@ -19,7 +20,7 @@
                     <input type="password"
                            placeholder="密码"
                            v-model="pwd" />
-                    <button @click="submit">登录</button>
+                    <button @click="signup">登录</button>
                 </form>
             </div>
             <div class="signup-bottom">
@@ -36,17 +37,25 @@ export default {
     data() {
         return {
             tel: '',
-            pwd: ''
+            pwd: '',
+            errmsg: ''
         }
     },
     methods: {
-        submit() {
+        signup() {
             this.$http.post('/api/signup', {
                 tel: this.tel,
                 pwd: this.pwd
             }).then((response) => {
-                this.$store.state.user = response.body.user;
-                this.$router.push('/more');
+                response = response.body;
+                console.log(response);
+                if (response.errno === 0) {
+                    this.$store.state.user = response.body.user;
+
+                    this.$router.push('/more');
+                } else if (response.errno === 1) {
+                    this.errmsg = response.errmsg;
+                }
             })
         }
     }
@@ -80,8 +89,12 @@ export default {
   .signup-main
     box-sizing: border-box
     padding: 0 15px
+    .errmsg
+      margin-top: 10px
+      color: #F4606C
+      text-align: center
     .signup-form
-      margin-top: 30px
+      margin-top: 10px
       form
         display: flex
         flex-direction: column

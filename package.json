@@ -12,6 +12,7 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "connect-mongo": "^1.3.2",
+    "express-session": "^1.15.2",
     "mongoose": "^4.9.6",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
